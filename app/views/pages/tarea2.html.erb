@@ -33,15 +33,12 @@
 </div>
 <script>
 
-//Make variables for storing Valarm sensor monitoring information
 var temperaturamin = [];
 var temperaturamax = [];
 var temp=[];
 var temp2=[];
 var hum=[];
 
-
-//Use Valarm Tools Cloud JSON API to get latest sensor data!
 $.ajax({
           url: "http://api.openweathermap.org/data/2.5/forecast?q=Santiago,CL&appid=b63ad7621c885ba9d1ed99d127c838cd&callback=?",
           async: false,
