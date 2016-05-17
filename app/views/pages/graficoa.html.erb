@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+            float: left;
+            height: 500px !important;
+
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chart1">
+    <svg></svg>
+</div>
+
+<script>
+
+var data=[
+
+            {
+                "key": "Ingreso Exportacion",
+                "values": [ [2002,0],[ 2003, 65] , [ 2004 , 166] , [2005 , 	77] , [ 2006 , 68] , [ 2007 , 227] , [ 2008 , 362] , [  2009 ,223] , [ 2010 , 	195	] , [ 2011 , 436] , [ 2012 , 312] , [ 2013 , 350] , [2014, 297] , [2015 , 227]]
+                
+            },
+            {
+                "key": "Ingreso Pais",
+    			"values": [[2002,0], [ 2003, 223] , [ 2004, 316	] , [ 2005 , 266] , [ 2006 , 486] , [ 2007 , 575] , [  2008 , 804] , [ 2009 ,800] , [ 2010 ,984] , [2011 ,1100] , [ 2012 ,1341] , [ 2013 ,1211] , [2014 ,1829] , [2015, 1449]]
+    			
+            },
+            {
+                "key": "Total Producción",
+                "values": [ [2002,0],[2003, 1440] , [ 2004 ,2505] , [ 2005 ,1546] , [ 2006 ,1332] , [2007 ,1943] , [  2008 ,1267] , [ 2009 ,1711] , [ 2010 ,1677] , [ 2011 ,2306] , [ 2012 , 2548] , [ 2013 ,2322] , [ 2014 , 1516] , [ 2015 ,2361]]
+            },
+            {
+                "key": "TC Cierre",
+                "values": [ [2002,0],[ 2003, 705] , [2004 , 625] , [ 2005,583	] , [ 2006 , 545] , [2007 ,526] , [  2008 , 496] , [ 2009 ,599] , [ 2010 ,550] , [ 2011 ,480] , [ 2012 ,480] , [ 2013 , 480] , [ 2014, 550] , [ 2015 , 600]]
+            }
+    	];
+
+	nv.addGraph(function() {
+        var chart = nv.models.cumulativeLineChart()
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1]})
+            .color(d3.scale.category10().range())
+            .duration(300)
+        chart.dispatch.on('renderEnd', function() {
+            console.log('render complete: cumulative line with guide line');
+        });		
+        d3.select('#chart1 svg')
+            .datum(data)
+            .call(chart);
+        nv.utils.windowResize(chart.update);
+        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        chart.state.dispatch.on('change', function(state){
+            nv.log('state', JSON.stringify(state));
+        });
+        return chart;
+    });
+    </script>
+</body>
+
+      </html>

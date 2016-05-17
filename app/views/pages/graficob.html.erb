@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    
+     <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+            height:500px !important;
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chart1">
+    <svg></svg>
+</div>
+
+<script>
+
+   var data=[
+
+        {
+            "key": "Mano Obra(P. Planta+Temporero)",
+            "values": [ [2002,0],[ 2003, 111] , [ 2004 , 189] , [2005 , 228] , [ 2006 , 294	] , [ 2007 , 380] , [ 2008 , 384] , [  2009 ,409] , [ 2010 , 455] , [ 2011 , 681] , [ 2012 , 667] , [ 2013 , 618] , [2014, 503] , [2015 , 620]]
+            
+        },
+        {
+            "key": "Insumos Quimicos",
+			"values": [[2002,0], [ 2003, 32] , [ 2004, 74] , [ 2005 , 79] , [ 2006 , 81] , [ 2007 , 125] , [  2008 , 149] , [ 2009 ,182] , [ 2010 ,175] , [2011 ,155] , [ 2012 ,224] , [ 2013 ,252] , [2014 ,203] , [2015, 288]]
+			
+        },
+        {
+            "key": "Sueldo y Honorarios",
+            "values": [ [2002,0],[2003, 29] , [ 2004 ,53] , [ 2005 ,61] , [ 2006 ,70] , [2007 ,63] , [  2008 ,146] , [ 2009 ,131] , [ 2010 ,128] , [ 2011 ,140] , [ 2012 , 175] , [ 2013 ,201] , [ 2014 , 233] , [ 2015 ,216]]
+        }
+	];	
+
+   nv.addGraph(function() {
+        var chart = nv.models.cumulativeLineChart()
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1]})
+            .color(d3.scale.category10().range())
+            .duration(300)
+        chart.dispatch.on('renderEnd', function() {
+            console.log('render complete: cumulative line with guide line');
+        });    
+        d3.select('#chart1 svg')
+            .datum(data)
+            .call(chart);
+        nv.utils.windowResize(chart.update);
+        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        chart.state.dispatch.on('change', function(state){
+            nv.log('state', JSON.stringify(state));
+        });
+
+        return chart;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+            height: 500px !important;
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chart1">
+    <svg></svg>
+</div>
+<script>
+var data=[
+
+        {
+            "key": "Inversiones",
+            "values": [ [2002,0],[ 2003, 92382] , [ 2004 , 87003] , [2005 , 76611] , [ 2006 , 117934] , [ 2007 , 58387] , [ 2008 , 11774] , [  2009 ,58755] , [ 2010 , 0] , [ 2011 , 0] , [ 2012 , 77110] , [ 2013 , 36114] , [2014, 161906] , [2015 , 110685]]
+            
+        },
+        {
+            "key": "Flujo Neto",
+            "values": [[2002,0], [ 2003, -29334] , [ 2004, -20413] , [ 2005 , -228598] , [ 2006 , -144559] , [ 2007 , 22939] , [  2008 , 256678] , [ 2009 , 25678] , [ 2010 ,241720] , [2011 , 311935] , [ 2012 , 234485] , [ 2013 ,260245] , [2014 ,823529] , [2015, 228749]]
+            
+        },
+        {
+            "key": "Flujo Neto Acumulado",
+            "values": [ [2002,0],[2003, -29334] , [ 2004 ,-49747] , [ 2005 ,-278345] , [ 2006 ,-422903] , [2007 , -399964] , [  2008 ,-143586] , [ 2009 ,-117908] , [ 2010 ,123812] , [ 2011 ,435747] , [ 2012 , 670232] , [ 2013 , 930477] , [ 2014 , 1754006] , [ 2015 ,1982755]]
+        }
+    ];
+    nv.addGraph(function() {
+        var chart = nv.models.cumulativeLineChart()
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1]})
+            .color(d3.scale.category10().range())
+            .duration(300)
+        chart.dispatch.on('renderEnd', function() {
+            console.log('render complete: cumulative line with guide line');
+        });
+			chart.yAxis.tickFormat(d3.format('.2'));
+        chart.xAxis    
+        d3.select('#chart1 svg')
+            .datum(data)
+            .call(chart);
+        nv.utils.windowResize(chart.update);
+        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        chart.state.dispatch.on('change', function(state){
+            nv.log('state', JSON.stringify(state));
+        });
+        return chart;
+    });
+</script>
+</body>
+      </html>

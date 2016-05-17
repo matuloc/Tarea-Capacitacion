@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+
+        svg {
+            display: block;
+            height: 500px !important;
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+        button {
+            margin: 2px;
+            margin-left: 80px;
+        }
+    </style>
+</head>
+<body>
+<div style="position:absolute; top: 0; left: 0;">
+    <button onclick="chart.switchYAxisOrder(!chart.switchYAxisOrder()); chart.update();">toggle axis</button>
+    <button onclick="chart.focusEnable(!chart.focusEnable()); chart.update();">toggle focus</button>
+    <span style="color: #C60;">&lt;-- turn focus on or off!</span>
+</div>
+<div id="chart1" class='with-3d-shadow with-transitions'>
+    <svg> </svg>
+</div>
+
+<script>
+var data=[
+        {
+            "key" : "Total Producción Consolidado" ,
+            "bar": true,
+            "values" : [ [ 2002 , 0] , [ 2003 , 1.44] , [ 2004 , 2.50] , [2005 , 1.55] , [ 2006 , 1.33] , [ 2007 , 1.94] , [ 2008 , 1.27] , [ 2009 , 1.71] , [ 2010 , 1.68] , [ 2011 , 2.31] , [ 2012 , 2.55] , [ 2013 , 2.32] , [ 2014 , 1.52] , [ 2015 , 2.36]]
+        },
+        {
+            "key" : "Ingresos por Kg" ,
+            "values" : [ [ 2002 , 0] , [ 2003 , 0.20] , [ 2004 , 0.19] , [ 2005 , 0.22] , [ 2006 , 0.42] , [ 2007 , 0.41] , [ 2008 , 0.92] , [ 2009 , 0.60] , [2010 , 0.70] , [ 2011 , 0.67] , [ 2012 , 0.66] , [ 2013 , 0.67] , [ 2014 , 1.39] , [ 2015 , 0.71]]
+        },
+        {
+            "key" : "Costo por Kg" ,
+            "values" : [ [ 2002 , 0] , [ 2003 , 0.16] , [ 2004 , 0.17] , [ 2005 , 0.32] , [ 2006 , 0.44] , [ 2007 , 0.37] , [ 2008 , 0.71] , [ 2009 , 0.55] , [2010 , 0.56] , [ 2011 , 0.54] , [ 2012 , 0.53] , [ 2013 , 0.54] , [ 2014 , 0.75] , [ 2015 , 0.57]]
+        },
+        {
+            "key" : "Flujo Operacional por Kg" ,
+            "values" : [ [ 2002 , 0] , [ 2003 , 0.04] , [ 2004 , 0.03] , [ 2005 , -0.10] , [ 2006 , -0.02] , [ 2007 , 0.04] , [ 2008 , 0.21] , [ 2009 , 0.05] , [2010 , 0.14] , [ 2011 , 0.14] , [ 2012 , 0.12] , [ 2013 , 0.13] , [ 2014 , 0.63] , [ 2015 , 0.14]]
+        }
+    ];
+
+
+	nv.addGraph(function() {
+        chart = nv.models.linePlusBarChart()
+            .margin({top: 50, right: 80, bottom: 30, left: 80})
+            .legendRightAxisHint(' [Using Right Axis]')
+			.x(function(d,i) { return d[0] })
+            .y(function(d,i) {return d[1] })
+            .color(d3.scale.category10().range());
+        chart.y2Axis.tickFormat(function(d) { return d3.format('.2')(d) });
+        chart.bars.forceY([0]).padData(false);   
+		d3.select('#chart1 svg')
+            .datum(data)
+            .transition().duration(500).call(chart);
+        nv.utils.windowResize(chart.update);
+        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        return chart;
+    });
+</script>
+</body>
+
+</html>

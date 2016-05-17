@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+            height: 500px !important;
+        }
+        html, body, svg {
+            margin: 20px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div  id=grafico1>
+<h1 ALIGN=center>Temperatura max y Temperatura min</h1>
+<svg></svg>
+</div>
+<div id="chart1">
+<h1 ALIGN=center>Temperatura</h1>
+    <svg></svg>
+</div>
+<div id="chart2" class='with-3d-shadow with-transitions'>
+<h1 ALIGN=center>Temperatura y Humedad</h1>
+    <svg> </svg>
+</div>
+<script>
+
+//Make variables for storing Valarm sensor monitoring information
+var temperaturamin = [];
+var temperaturamax = [];
+var temp=[];
+var temp2=[];
+var hum=[];
+
+
+//Use Valarm Tools Cloud JSON API to get latest sensor data!
+$.ajax({
+          url: "http://api.openweathermap.org/data/2.5/forecast?q=Santiago,CL&appid=b63ad7621c885ba9d1ed99d127c838cd&callback=?",
+          async: false,
+          dataType: "jsonp",
+          success: function(data) {
+            for (i = 0; i < data.list.length; i++) {
+                if (data.list[i] != 0) {
+                    temperaturamin.push({x: (data.list[i].dt)*1000,
+                        y: data.list[i].main.temp_min});
+                                                      
+                    temperaturamax.push({x: (data.list[i].dt)*1000, 
+                        y: data.list[i].main.temp_max});
+
+                    temp.push({x: data.list[i].dt_txt,
+                        y: data.list[i].main.temp});
+
+                     temp2.push({x: (data.list[i].dt)*1000,
+                        y: data.list[i].main.temp});
+
+                    hum.push({x: (data.list[i].dt)*1000,
+                        y: data.list[i].main.humidity});
+                }
+            }
+            Graficouno();
+            Graficodos();
+            Graficotres();
+         }
+});
+function minvsmax() {
+    return [
+        {
+            values: temperaturamin,
+            key: 'Temperatura Min',
+            color: '#ff7f0e'
+        },
+        {
+            values: temperaturamax,
+            key: 'Temperatura Max',
+            color: '#7777ff'
+        }
+    ];
+}
+function barra(){
+    return [
+        {
+            values: temp,
+            key: "Temperatura"
+        }
+    ];
+  }
+function tempvshume() {
+    return [
+        {
+            values: temp2,
+            key: 'Temperatura',
+            bar: true,
+            color: '#ff7f0e'
+        },
+        {
+            values: hum,
+            key: 'Humedad',
+            color: '#7777ff'
+        }
+    ];
+}
+
+
+function Graficouno() {
+    nv.addGraph(function() {
+        var chart = nv.models.lineChart();
+
+        chart.xAxis
+            .axisLabel("Tiempo")
+            .tickFormat(function(d) {
+            return d3.time.format("%a")(new Date(d))
+            });
+
+        chart.yAxis
+            .axisLabel("Temperature Min + Temperatura Max");
+
+        d3.select("#grafico1 svg")
+            .datum(minvsmax())
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
+}
+
+function Graficodos()
+{
+  nv.addGraph(function() {
+        var chartt = nv.models.discreteBarChart();
+
+        chartt.rotateLabels(-90);
+
+        chartt.yAxis.axisLabel("Temperatura");
+
+        d3.select('#chart1 svg')
+            .datum(barra())
+            .call(chartt);
+
+        nv.utils.windowResize(chartt.update);
+        return chartt;
+    });
+}
+function Graficotres(){
+    nv.addGraph(function() {
+        var chart3 = nv.models.linePlusBarChart();
+
+            chart3.xAxis
+                .axisLabel("Tiempo")
+                .tickFormat(function(d) {
+                return (d3.time.format("%a"))(new Date(d))
+                });
+
+        d3.select('#chart2 svg')
+            .datum(tempvshume)
+            .call(chart3);
+
+        nv.utils.windowResize(chart3.update);
+
+        return chart3;
+    });
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TareaCapacitacion</title>
+  <%= stylesheet_link_tag    'application' %>
+  <%= stylesheet_link_tag "nv.d3" %>
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag 'd3.min' %>
+  <%= javascript_include_tag 'nv.d3' %>
+  <%= javascript_include_tag 'jquery-1.12.0.min.' %>
+  <%= javascript_include_tag 'jquery.dataTables.min' %>
+  <%= stylesheet_link_tag "jquery.dataTables.min" %> 
+</head>
+<body>
+<%= render 'shared/navbar' %>
+<div class="main-page-content <% controller.controller_name %> ">
+<%= yield %>
+</body>
+</html>
+  

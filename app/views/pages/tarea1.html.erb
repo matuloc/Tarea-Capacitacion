@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+  table, th, td {
+        margin: 20px;
+        margin-left: 400px;
+        padding: 0px;
+        width: 100px;
+        text-align: center;   
+    }
+
+    th{
+        border:2px solid black;
+        padding-left: 2.5px;
+        padding-right: 2.5px;
+    }
+
+    td{
+        border: 1px solid black;
+    }
+  </style>
+  </head>
+  <body>
+    <table id="split">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+    <script>
+
+var temp=[];
+var contador=0;
+
+$.ajax({
+          url: "http://api.openweathermap.org/data/2.5/forecast?q=Santiago,CL&appid=b63ad7621c885ba9d1ed99d127c838cd&callback=?",
+          async: false,
+          dataType: "jsonp",
+          success: function(data) {
+            for (i = 0; i < data.list.length; i++) {
+                contador++;
+                if (data.list[i] != 0) {
+                    temp.push({N: contador,
+                        Húmedad : data.list[i].main.humidity,
+                    Temperatura : data.list[i].main.temp,
+                    Temperatura_mínima : data.list[i].main.temp_min,
+                    Temperatura_máxima : data.list[i].main.temp_max,
+                    fechas_horas : data.list[i].dt_txt
+                        });
+                }
+            }
+            tablas();
+         }
+});
+
+function tablas()
+{
+
+  // se crea la cabecera
+    var thead = d3.select("thead")
+               .selectAll("th")
+               .data(d3.keys(temp[0]))
+               .enter()
+               .append("th")
+               .text(function(d){return d});
+// se llena la tabla
+// se crea las filas
+    var tr = d3.select("tbody")
+            .selectAll("tr")
+            .data(temp)
+            .enter()
+            .append("tr")
+// se crea las columnas
+    var td = tr.selectAll("td")
+            .data(function(d){return d3.values(d)})
+            .enter()
+            .append("td")
+            .text(function(d) {return d})
+}
+    </script>
+  </body>
+</html>
